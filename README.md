@@ -3,7 +3,7 @@
  More Info here >>
  After you clone this repo:
 
- you cd my_repository in your terminal to get to the appropriate folder
+ Start with using cd my_repository in your terminal to get to the appropriate folder
 
  You must start with activating the virtual environment run the following in your terminal:
  source myenv/bin/activate
