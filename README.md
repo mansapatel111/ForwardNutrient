@@ -32,5 +32,5 @@ Once it runs successfully, this will point you to a link which should be somethi
 
 This will give you a way to see updates to the website.
 
-You wont have to do this set up everytime, just run python pyrun.py and you can check out what your changes are doing!
+You wont have to do this set up everytime, just activate your virtual environment and run python pyrun.py and you can check out what your changes are doing!
 
