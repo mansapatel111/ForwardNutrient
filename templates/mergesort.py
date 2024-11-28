@@ -26,13 +26,25 @@ for index, row in rest.iterrows():
     
 #makes a vector of tuples with a food item and a nutrient value of food items under a chosen category for a chosen restaurant that are going to be sorted based on what the user is looking for
 #e.g. user chooses The Cheesecake Factory, Desserts, and calories so the vector is tuples of desserts from that restaurant with their corresponding calories
-def mergeFunction(restaurant_input, category_input, nutrition_input):
+def mergeFunction(restaurant_input, category_input, nutrition_input, level):
     food_items = []
     for food_name, food_info in restaurants[restaurant_input][category_input].items():
         nutrition = next(value for n, value in food_info if n == nutrition_input)
         food_items.append((food_name, nutrition))
     #sorts the food_items vector with the merge sort algorithm
     mergeSort(food_items, 0, len(food_items) - 1)
+
+    #makes a vector of the highest 5 or lowest 5 foods in the inputted nutrition and returns it
+    leveledFoods = []
+    if(level == "low"):
+        for a in range(5):
+            leveledFoods.append(food_items[a][0])
+            leveledFoods.append(food_items[a][1])
+    if(level == "high"):
+        for b in range(-1, -6, -1):
+            leveledFoods.append(food_items[b][0])
+            leveledFoods.append(food_items[b][1])
+    return leveledFoods
 
 #merge and mergeSort logic from Discussion 8 - Sorting slides 11 and 12
 #part of the merge sort where it merges two sections of the main vector
@@ -84,6 +96,6 @@ def mergeSort(rests, start, end):
 
 
 #sorts the food_items vector in ascending order using a merge sort algorithm
-restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "protein"
-mergeFunction(restaurant_input, category_input, nutrition_input)
+restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "calories"
+mergeFunction(restaurant_input, category_input, nutrition_input, "low")
 #print(food_items)
