@@ -48,13 +48,7 @@ def quick_main(user_r, course, priority, high_low):
                                                        ('sodium', sodium), ('carbs', carbs), ('fiber', fiber),
                                                        ('sugar', sugar), ('protein', protein)]
 
-    # what restaurant are you eating at?
-    # user_r = input("What restaurant are you eating at today?")
-    # course = input("What course are you looking for?")
-    # priority = input("Please select your number one nutrition priority?")
-    # high_low = input(f"Do you want your food item to be high or low in {priority}?")
-    # take in user input and ask if their priority is high or low measurement and which factor is most important to them
-
+    #following code initializes a meal_list with meal name and nutrition value as a tuple
     meal_list = []
     curr_dict = restaurants[user_r]
 
@@ -69,8 +63,25 @@ def quick_main(user_r, course, priority, high_low):
                     break
             if value is not None:
                 meal_list.append((food_name, value))
+ 
+    meal_list = quick_sort(meal_list)
+    
+    #makes vector for top 5 or bottom 5
+    if high_low == 'high':
+        top_5 = []
+        for i in range(0, 6):
+            top_5.append(meal_list[i][0])
+            top_5.append(meal_list[i][1])
+            return top_5
+    else:
+        bottom_5 = []
+        for i in range(-1, -6, -1):
+            bottom_5.append(meal_list[i][0])
+            bottom_5.append(meal_list[i][1])
+            return bottom_5
+    
 
-    print(quick_sort(meal_list))
+
 
 # Ensure the script runs only if executed directly
 #if __name__ == "__main__":
