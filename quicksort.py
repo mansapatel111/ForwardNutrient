@@ -21,9 +21,9 @@ def quick_sort(meal_list):
 
 
 
-def main():
+def quick_main(user_r, course, priority, high_low):
     # Main script logic goes here
-    rest = pd.read_excel("C:/Users/pvano/Downloads/ms_annual_data_2022.xlsx")
+    rest = pd.read_excel("data/ms_annual_data_2022.xlsx")
     restaurants = {}
     counter = 0
     for index, row in rest.iterrows():
@@ -49,10 +49,10 @@ def main():
                                                        ('sugar', sugar), ('protein', protein)]
 
     # what restaurant are you eating at?
-    user_r = input("What restaurant are you eating at today?")
-    course = input("What course are you looking for?")
-    priority = input("Please select your number one nutrition priority?")
-    high_low = input(f"Do you want your food item to be high or low in {priority}?")
+    # user_r = input("What restaurant are you eating at today?")
+    # course = input("What course are you looking for?")
+    # priority = input("Please select your number one nutrition priority?")
+    # high_low = input(f"Do you want your food item to be high or low in {priority}?")
     # take in user input and ask if their priority is high or low measurement and which factor is most important to them
 
     meal_list = []
@@ -70,11 +70,11 @@ def main():
             if value is not None:
                 meal_list.append((food_name, value))
 
-    quick_sort(meal_list)
+    print(quick_sort(meal_list))
 
 # Ensure the script runs only if executed directly
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #quick_main("Dairy Queen", "Desserts", "protein", "high")
 
 
 
