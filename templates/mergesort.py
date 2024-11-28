@@ -2,6 +2,7 @@ import pandas as pd
 rest = pd.read_excel("C:/Users/vikyc/Documents/ms_annual_data_2022.xlsx")
 rest.head()
 
+
 restaurants = {}
 counter = 0
 for index, row in rest.iterrows():
@@ -25,13 +26,13 @@ for index, row in rest.iterrows():
     
 #makes a vector of tuples with a food item and a nutrient value of food items under a chosen category for a chosen restaurant that are going to be sorted based on what the user is looking for
 #e.g. user chooses The Cheesecake Factory, Desserts, and calories so the vector is tuples of desserts from that restaurant with their corresponding calories
-def foodVector(restaurant_input, category_input, nutrition_input):
+def mergeFunction(restaurant_input, category_input, nutrition_input):
     food_items = []
     for food_name, food_info in restaurants[restaurant_input][category_input].items():
         nutrition = next(value for n, value in food_info if n == nutrition_input)
         food_items.append((food_name, nutrition))
-    #returns the vector of foods
-    return food_items
+    #sorts the food_items vector with the merge sort algorithm
+    mergeSort(food_items, 0, len(food_items) - 1)
 
 #merge and mergeSort logic from Discussion 8 - Sorting slides 11 and 12
 #part of the merge sort where it merges two sections of the main vector
@@ -84,6 +85,5 @@ def mergeSort(rests, start, end):
 
 #sorts the food_items vector in ascending order using a merge sort algorithm
 restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "protein"
-food_items = foodVector(restaurant_input, category_input, nutrition_input)
-mergeSort(food_items, 0, len(food_items) - 1)
+mergeFunction(restaurant_input, category_input, nutrition_input)
 #print(food_items)
