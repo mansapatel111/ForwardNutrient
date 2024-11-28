@@ -23,7 +23,7 @@ def quick_sort(meal_list):
 
 def quick_main(user_r, course, priority, high_low):
     # Main script logic goes here
-    rest = pd.read_excel("data/ms_annual_data_2022.xlsx")
+    rest = pd.read_excel("C:/Users/pvano/Downloads/ms_annual_data_2022.xlsx")
     restaurants = {}
     counter = 0
     for index, row in rest.iterrows():
@@ -67,27 +67,23 @@ def quick_main(user_r, course, priority, high_low):
     meal_list = quick_sort(meal_list)
     
     #makes vector for top 5 or bottom 5
-    if high_low == 'high':
-        top_5 = []
-        for i in range(0, 6):
-            top_5.append(meal_list[i][0])
-            top_5.append(meal_list[i][1])
-            return top_5
-    else:
+    if high_low == 'low':
         bottom_5 = []
-        for i in range(-1, -6, -1):
+        for i in range(5):
             bottom_5.append(meal_list[i][0])
             bottom_5.append(meal_list[i][1])
-            return bottom_5
+        return(bottom_5)
+    else:
+        top_5 = []
+        for i in range(-1, -6, -1):
+            top_5.append(meal_list[i][0])
+            top_5.append(meal_list[i][1])
+        return(top_5)
     
 
 
 
 # Ensure the script runs only if executed directly
 #if __name__ == "__main__":
-    #quick_main("Dairy Queen", "Desserts", "protein", "high")
-
-
-
-
+   # quick_main("Dairy Queen", "Desserts", "protein", "high")
 
