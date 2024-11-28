@@ -2,7 +2,6 @@ import pandas as pd
 rest = pd.read_excel("C:/Users/vikyc/Documents/ms_annual_data_2022.xlsx")
 rest.head()
 
-
 restaurants = {}
 counter = 0
 for index, row in rest.iterrows():
@@ -17,32 +16,42 @@ for index, row in rest.iterrows():
             restaurants[r][category] = item
         else:
             restaurants[r][category][food_name] = [("calories", calories), ("fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbs", carbs), ("fiber", fiber), ("sugar", sugar), ("protein", protein)]
-print(dict(list(restaurants.items())[:5]))
+#print(dict(list(restaurants.items())[:5]))
 
 
-#restaurant, category
-restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "protein"
-food_items = []
-for food_name, food_info in restaurants[restaurant_input][category_input].items():
-    nutrition = next(value for n, value in food_info if n == nutrition_input)
-    food_items.append((food_name, nutrition))
+#performs the merge sort algorithm based on user selections
+#def merge_sort_setup(restaurant_input, category_input, nutrition_input):
+    #restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "protein"
+    
+#makes a vector of tuples with a food item and a nutrient value of food items under a chosen category for a chosen restaurant that are going to be sorted based on what the user is looking for
+#e.g. user chooses The Cheesecake Factory, Desserts, and calories so the vector is tuples of desserts from that restaurant with their corresponding calories
+def foodVector(restaurant_input, category_input, nutrition_input):
+    food_items = []
+    for food_name, food_info in restaurants[restaurant_input][category_input].items():
+        nutrition = next(value for n, value in food_info if n == nutrition_input)
+        food_items.append((food_name, nutrition))
+    #returns the vector of foods
+    return food_items
 
+#merge and mergeSort logic from Discussion 8 - Sorting slides 11 and 12
+#part of the merge sort where it merges two sections of the main vector
 def merge(arr, left, mid, right):
+    #creates two smaller vectors representing left and right halves based on the parameter values
     leftSize = mid - left + 1
     rightSize = right - mid
-
     leftArr = [0] * leftSize
     rightArr = [0] * rightSize
-
     for i in range(leftSize):
         leftArr[i] = arr[left + i]
     for j in range(rightSize):
         rightArr[j] = arr[mid + 1 + j]
 
+    #pointers that keep track of current index in both vectors
     leftPtr = 0
     rightPtr = 0
     mergedPtr = left
 
+    #merges the two vectors into the original vector so that section is now in order
     while(leftPtr < leftSize and rightPtr < rightSize):
         if(leftArr[leftPtr][1] <= rightArr[rightPtr][1]):
             arr[mergedPtr] = leftArr[leftPtr]
@@ -52,16 +61,19 @@ def merge(arr, left, mid, right):
             rightPtr += 1
         mergedPtr += 1
 
+    #if there's leftover elements in the left vector, puts them in the original vector
     while(leftPtr < leftSize):
         arr[mergedPtr] = leftArr[leftPtr]
         mergedPtr += 1
         leftPtr += 1
-    
+
+    #if there's leftover elements in the left vector, puts them in the original vector
     while(rightPtr < rightSize):
         arr[mergedPtr] = rightArr[rightPtr]
         mergedPtr += 1
         rightPtr += 1
 
+#sorts the left and right sections of the 'rests' vector recursively resulting in a sorted final vector
 def mergeSort(rests, start, end):
     if(start < end):
         middle = (start + end) // 2
@@ -69,5 +81,9 @@ def mergeSort(rests, start, end):
         mergeSort(rests, middle + 1, end)
         merge(rests, start, middle, end)
 
+
+#sorts the food_items vector in ascending order using a merge sort algorithm
+restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "protein"
+food_items = foodVector(restaurant_input, category_input, nutrition_input)
 mergeSort(food_items, 0, len(food_items) - 1)
-print(food_items)
+#print(food_items)
