@@ -102,7 +102,7 @@
     <!-- Page 1: Select a Restaurant -->
     <div id="page1" class="hidden">
         <div class="centered-content">
-            <h2>Choose a restaurant </h2>
+            <h2>Choose a restaurant</h2>
             <select id="restaurant">
                 <option value="">Select a Restaurant</option>
                 <option value="Applebee's">Applebee's</option>
@@ -118,8 +118,7 @@
                 <option value="Captain D's">Captain D's</option>
                 <option value="Carrabba's Italian Grill">Carrabba's Italian Grill</option>
                 <option value="Checker's Drive-In/ Rally's">Checker's Drive-In/ Rally's</option>
-                <option value="Cheddar's Casual Café / Cheddar's Scratch Kitchens">Cheddar's Casual Café / Cheddar's
-                    Scratch Kitchen</option>
+                <option value="Cheddar's Casual Café / Cheddar's Scratch Kitchen">Cheddar's Casual Café / Cheddar's Scratch Kitchen</option>
                 <option value="Chick Fil A">Chick Fil A</option>
                 <option value="Chili's">Chili's</option>
                 <option value="Chipotle">Chipotle</option>
@@ -159,12 +158,8 @@
                 <option value="Starbucks">Starbucks</option>
                 <option value="Taco Bell">Taco Bell</option>
                 <option value="The Cheesecake Factory">The Cheesecake Factory</option>
-                <option value="Starbucks">Starbucks</option>
-
-
-                <option value="Qdoba">Qdoba</option>
             </select>
-            <button onclick="goToPage(2)">Next</button>
+            <button onclick="setRestaurant()">Next</button>
         </div>
     </div>
 
@@ -207,7 +202,7 @@
             <h2>Choose your level:</h2>
             <div style="display: flex; gap: 20px; justify-content: center;">
                 <button onclick="setLevel('High')">High (&gt;30g)</button>
-                <button onclick="setLevel('Medium')">Medium (15 - 30g)</button>
+                <!-- <button onclick="setLevel('Medium')">Medium (15 - 30g)</button> -->
                 <button onclick="setLevel('Low')">Low (&lt;15g)</button>
             </div>
         </div>
@@ -248,72 +243,133 @@
     <script>
         let selectedRestaurant = '';
         let selectedCategory = '';
-        let selectedCriteria = ''; // e.g., Calories, Protein
-        let selectedLevel = ''; // e.g., High, Medium, Low
-
-        // Function to navigate between pages
+        let selectedCriteria = '';
+        let selectedLevel = '';
+    
         function goToPage(pageNumber) {
-            // Hide all pages
             document.querySelectorAll('div[id^="page"]').forEach(page => {
                 page.classList.add('hidden');
             });
-
-            // Show the target page
             document.getElementById(`page${pageNumber}`).classList.remove('hidden');
         }
-
-        // Function to set the selected category (From Page 2)
-        function setCategory(category) {
-            selectedCategory = category; // Set the chosen category
-            console.log(`Selected Category: ${category}`);
-            goToPage(3); // Navigate to Page 3 (Criteria Selection)
-        }
-
-        // Function to set the selected criteria (From Page 3)
-        function setCriteria(criteria) {
-            selectedCriteria = criteria; // Set the chosen criteria 
-            console.log(`Selected Criteria: ${criteria}`);
-            goToPage(4); // Navigate to Page 4 (Choose Level)
-        }
-
-        // Function to handle level selection (From Page 4)
-        function setLevel(level) {
-            selectedLevel = level; // Set the chosen level 
-            console.log(`Selected Level: ${level} for ${selectedCriteria}`);
-            goToPage(5); // Navigate to the Results Page
-        }
-
-        // Function to fetch and display sorted data (Optional for Results Page)
-        async function fetchSortedData(column, algorithm) {
-            try {
-                const response = await fetch(`/sort?column=${column}&algorithm=${algorithm}`);
-                const sortedData = await response.json();
-                displayResults(sortedData);
-                goToPage(5);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+    
+        function setRestaurant() {
+            
+            selectedRestaurant = document.getElementById('restaurant').value;
+            if (!selectedRestaurant) {
+                alert('Please select a restaurant!');
+            return;
             }
+            console.log('Selected restaurant:', selectedRestaurant);
+
+            goToPage(2);
         }
 
-        // Function to display results in the table (For Page 5)
-        function displayResults(data) {
-            const tbody = document.getElementById('resultsTable');
-            tbody.innerHTML = '';
+    
+        function setCategory(category) {
+            selectedCategory = category;
+            console.log(`Selected Category: ${category}`);
+            goToPage(3);
+        }
+    
+        function setCriteria(criteria) {
+            selectedCriteria = criteria;
+            console.log(`Selected Criteria: ${criteria}`);
+            goToPage(4);
+        }
+    
+        function setLevel(level) {
+            selectedLevel = level;
+            console.log(`Selected Level: ${level}`);
+            fetchSortedData(selectedRestaurant, selectedCategory, selectedCriteria, selectedLevel);
+        }
 
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.foodName}</td>
-                    <td>${item.category}</td>
-                    <td>${item.calories}</td>
-                    <td>${item.protein}</td>
-                    <td>${item.fat}</td>
-                `;
-                tbody.appendChild(row);
+        function fetchSortedData(restaurant, category, criteria, level) {
+            console.log('Sending request with data:', { restaurant, category, criteria, level });
+
+            fetch('http://127.0.0.1:5000/sort', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ restaurant, category, criteria, level })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response data:', data);
+                populateResultsTable(message);
+                goToPage(5);
+            })
+            .catch(error => {
+                console.error('Error fetching sorted data:', error);
+                alert('An error occurred while fetching data. Please try again.');
             });
         }
 
+        
+        function populateResultsTable(data) {
+            console.log("Data received:", data); // Debugging the data format
+
+            const resultsTable = document.getElementById('resultsTable');
+            if (!resultsTable) {
+                console.error("Error: Unable to find the table element with ID 'resultsTable'");
+                return;
+            }
+
+            resultsTable.innerHTML = ''; // Clear previous results
+
+        
+
+            if (data.length === 0) {
+                resultsTable.innerHTML = `<tr><td colspan="2">No results found</td></tr>`;
+                return;
+            }
+
+            // Using a for loop instead of forEach
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+
+                // Ensure each item is a tuple with exactly two elements
+                
+
+                const [itemName, value] = item;
+
+                if (typeof itemName !== 'string' || typeof value !== 'number') {
+                    console.error("Error: Invalid item format - Expected (string, number):", item);
+                    continue; // Skip invalid items
+                }
+
+                // Create a new table row
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${itemName}</td>
+                    <td>${value}</td>
+                `;
+                resultsTable.appendChild(row);
+            }
+        }
+
+
+        
+                
+
+
+    
+        // function displayResults(data) {
+        //     const tbody = document.getElementById('resultsTable');
+        //     tbody.innerHTML = '';
+    
+        //     data.forEach(item => {
+        //         console.log('Displaying item:', item); // Debugging line to print each item
+        //         const row = document.createElement('tr');
+        //         row.innerHTML = `
+        //             <td>${item.foodName}</td>
+        //             <td>${item.category}</td>
+        //             <td>${item.criteriaValue}</td>
+        //         `;
+        //         tbody.appendChild(row);
+        //     });
+        // }
     </script>
-</body>
 
 </html>
