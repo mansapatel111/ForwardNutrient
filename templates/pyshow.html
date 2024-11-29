@@ -336,7 +336,7 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Response data:', data);
-                populateResultsTable(message);
+                populateResultsTable(data);
                 goToPage(5);
             })
             .catch(error => {
@@ -366,25 +366,24 @@
 
             // Using a for loop instead of forEach
             for (let i = 0; i < data.length; i++) {
-                const item = data[i];
 
-                // Ensure each item is a tuple with exactly two elements
-                
-
-                const [itemName, value] = item;
-
-                if (typeof itemName !== 'string' || typeof value !== 'number') {
-                    console.error("Error: Invalid item format - Expected (string, number):", item);
-                    continue; // Skip invalid items
+                if (i % 2 == 0 ){
+                    const itemName = data[i];
+                    const value = data[i + 1];
+                    // Create a new table row
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${itemName}</td>
+                        <td>${value}</td>
+                    `;
+                    resultsTable.appendChild(row);
+                    }
+                else {
+                    continue;
                 }
 
-                // Create a new table row
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${itemName}</td>
-                    <td>${value}</td>
-                `;
-                resultsTable.appendChild(row);
+                // Ensure each item is a tuple with exactly two elements
+                     
             }
         }
 
