@@ -72,18 +72,42 @@ def quick_main(user_r, course, priority, high_low):
         for i in range(5):
             bottom_5.append(meal_list[i][0])
             bottom_5.append(meal_list[i][1])
-        return(bottom_5)
+        result = bottom_5
     else:
         top_5 = []
         for i in range(-1, -6, -1):
             top_5.append(meal_list[i][0])
             top_5.append(meal_list[i][1])
-        return(top_5)
+        result = top_5
     
+    result = top_nutrient_facts(result, user_r, course, restaurants, priority)
+    return result
+
+def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
+    nutrients = []
+    
+    curr_dict = restaurants.get(user_r, {})
+    course_items = curr_dict.get(course, {})
+
+    for i in range(0, len(result_vector), 2):  
+        meal_name = result_vector[i]
+        priority_value = result_vector[i + 1]
+        
+        nutrients.append(meal_name)
+        nutrients.append(priority_value)
+        
+        if meal_name in course_items:
+            nutrient_facts = course_items[meal_name]
+            for nutrient, value in nutrient_facts:
+                if nutrient != priority:  # Skip the priority metric
+                    nutrients.append(value)
+
+    return nutrients
+
+
 
 
 
 # Ensure the script runs only if executed directly
 #if __name__ == "__main__":
-   # quick_main("Dairy Queen", "Desserts", "protein", "high")
-
+   #print(quick_main("Dairy Queen", "Desserts", "protein", "high"))
