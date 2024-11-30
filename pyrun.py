@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
 from quicksort import quick_main
-from mergesort import mergeSort
+from mergesort import mergeFunction
 app = Flask(__name__)
 
 data = pd.read_excel('data/ms_annual_data_2022.xlsx')
@@ -10,6 +10,7 @@ data = pd.read_excel('data/ms_annual_data_2022.xlsx')
 def home():
     return render_template('pyshow.html')
 
+@app.route('/sort', methods=['POST'])
 @app.route('/sort', methods=['POST'])
 def sort_data():
     data = request.json
@@ -20,17 +21,23 @@ def sort_data():
     category = data.get('category', '')
     criteria = data.get('criteria', '')
     level = data.get('level', '')
+    sorting = data.get('sorting', '')
 
     if not restaurant or not category or not criteria or not level:
         return jsonify({'error': 'Missing data fields'}), 400
 
-    message = quick_main(restaurant, category, criteria, level)
+    if sorting == 'Quick': 
+        sorted_data = quick_main(restaurant, category, criteria, level)
+    else:
+        sorted_data = mergeFunction(restaurant, category, criteria, level)
     # print(quicksort.quick_main(restaurant, category, criteria, level))
+
+    # print(message)
     
-    print(message)
     
     
-    
-    return jsonify({'message': message})
+    return jsonify(sorted_data)
+
 if __name__ == '__main__':
     app.run(debug=True)
+
