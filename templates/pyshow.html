@@ -13,7 +13,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background-image: url('static/images/NextNutrForward.png');
+            background-image: url('static/images/Nutrient_Forward.png');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -52,7 +52,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
+        }
+
+        .centered-content-result {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 35px;
         }
 
         select,
@@ -71,24 +78,58 @@
 
         button {
             padding: 10px 20px;
-            font-size: 16px;
+            font-size:17px;
             font-style: bold;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            background-color: #007BFF;
-            color: #abd7ff;
+            background-color:  #abd7ff;
+            color: #203162;
             width: 150px;
             text-align: center;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #ffc610; /* #4672f4 */
         }
 
         h2 {
             font-size: 48px;
             margin-bottom: 20px;
+        }
+        h3 {
+            font-size: 28px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        /* Table styling here below */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+            text-align: left;
+        }
+
+        /* tr:nth-child(even) {
+            background-color: #f2f2f2;
+        } */
+
+        /* tr:hover {
+            background-color: #ddd;
+        } */
+
+        td.centered {
+            text-align: center;
+            font-style: bold;
         }
     </style>
 </head>
@@ -217,7 +258,7 @@
             <button onclick="setCategory('Desserts')">Desserts</button>
             <button onclick="setCategory('Baked Goods')">Baked Goods</button>
             <button onclick="setCategory('Beverages')">Beverages</button>
-            <button onclick="setCategory('Toppings & Ingredients')">Toppings & Ingredients</button>
+            <button onclick="setCategory('Toppings & Ingredients')">Toppings</button>
         </div>
     </div>
 
@@ -238,11 +279,11 @@
     <!-- Page 4: Choose Your Level -->
     <div id="page4" class="hidden">
         <div class="centered-content">
-            <h2>Choose your level:</h2>
+            <h2>Choose your desired level:</h2>
             <div style="display: flex; gap: 20px; justify-content: center;">
-                <button onclick="setLevel('High')">High (&gt;30g)</button>
+                <button onclick="setLevel('High')">High</button>
                 <!-- <button onclick="setLevel('Medium')">Medium (15 - 30g)</button> -->
-                <button onclick="setLevel('Low')">Low (&lt;15g)</button>
+                <button onclick="setLevel('Low')">Low </button>
             </div>
         </div>
     </div>
@@ -251,30 +292,46 @@
         <div class="centered-content">
             <h2>Choose your sorting method:</h2>
             <div style="display: flex; gap: 20px; justify-content: center;">
-                <button onclick="setLevel('High')">Merge Sort</button>
-                <button onclick="setLevel('Low')">Quick Sort</button>
+                <button onclick="setSort('Merge')">Merge Sort</button>
+                <button onclick="setSort('Quick')">Quick Sort</button>
             </div>
         </div>
     </div>
-    <!-- Page 5: Display Results -->
-    <div id="page5" class="hidden">
-        <div class="centered-content">
-            <h2>Results</h2>
+    <!-- Page 6: Display Results -->
+    <div id="page6" class="hidden">
+        <div class="centered-content-result">
+            <h2>Results using <span id ="selectedSort"></span> sort</h2>
+            <h3><span id="selectedLevel"></span> <span id="selectedCriteria"></span> <span id="selectedCategory"></span> at <span id="selectedRestaurant"></span> </h3>
             <table>
                 <thead>
                     <tr>
                         <th>Food Item</th>
-                        <th>Category</th>
                         <th>Calories</th>
-                        <th>Protein (g)</th>
-                        <th>Fat (g)</th>
+                        <th>Protein</th>
+                        <th>Fat</th>
+                        <th>Cholestrol</th>
+                        <th>Sodium</th>
+                        <th>Carbs</th>
+                        <th>Fiber</th>
+                        <th>Sugar</th>
                     </tr>
                 </thead>
                 <tbody id="resultsTable">
-                    <!-- Data should shoulf hopefully be dynamically inserted here -->
+                    <!-- Data should hopefully be dynamically inserted here -->
+                    <tr>
+                        <td class="centered">${itemName}</td>
+                        <td class="centered">${value_calories}</td>
+                        <td class="centered">${value_protein}</td>
+                        <td class="centered">${value_fat}</td>
+                        <td class="centered">${value_cholestrol}</td>
+                        <td class="centered">${value_sodium}</td>
+                        <td class="centered">${value_carbs}</td>
+                        <td class="centered">${value_fiber}</td>
+                        <td class="centered">${value_sugar}</td>
+                    </tr>
                 </tbody>
             </table>
-            <button onclick="goToPage(1)">Start Over</button>
+            <button onclick="restart()">Start Over</button>
         </div>
     </div>
 
@@ -293,14 +350,19 @@
         let selectedCategory = '';
         let selectedCriteria = '';
         let selectedLevel = '';
+        let selectedSort = '';
     
         function goToPage(pageNumber) {
             document.querySelectorAll('div[id^="page"]').forEach(page => {
                 page.classList.add('hidden');
             });
             document.getElementById(`page${pageNumber}`).classList.remove('hidden');
+            if (pageNumber === 6) {
+                updateResultsTitle();
+            }
         }
-    
+        
+
         function setRestaurant() {
             
             selectedRestaurant = document.getElementById('restaurant').value;
@@ -325,28 +387,51 @@
             console.log(`Selected Criteria: ${criteria}`);
             goToPage(4);
         }
-    
+        
+        
+
+
         function setLevel(level) {
             selectedLevel = level;
             console.log(`Selected Level: ${level}`);
-            fetchSortedData(selectedRestaurant, selectedCategory, selectedCriteria, selectedLevel);
+        
+
+           goToPage(5);
+            
+        }
+        
+        function setSort(sorting) {
+            selectedSort = sorting;
+            console.log(`Selected Sort: ${sorting}`);
+        
+            
+            fetchSortedData(selectedRestaurant, selectedCategory, selectedCriteria, selectedLevel, selectedSort);
+
+            
         }
 
-        function fetchSortedData(restaurant, category, criteria, level) {
-            console.log('Sending request with data:', { restaurant, category, criteria, level });
+        function updateResultsTitle() {
+            document.getElementById('selectedLevel').textContent = selectedLevel;
+            document.getElementById('selectedCriteria').textContent = selectedCriteria;
+            document.getElementById('selectedCategory').textContent = selectedCategory;
+            document.getElementById('selectedRestaurant').textContent = selectedRestaurant;
+            document.getElementById('selectedSort').textContent = selectedSort;
+        }
+        function fetchSortedData(restaurant, category, criteria, level, sorting) {
+            console.log('Sending request with data:', { restaurant, category, criteria, level, sorting });
 
             fetch('http://127.0.0.1:5000/sort', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ restaurant, category, criteria, level })
+                body: JSON.stringify({ restaurant, category, criteria, level, sorting })
             })
             .then(response => response.json())
             .then(data => {
                 console.log('Response data:', data);
                 populateResultsTable(data);
-                goToPage(5);
+                goToPage(6);
             })
             .catch(error => {
                 console.error('Error fetching sorted data:', error);
@@ -356,7 +441,9 @@
 
         
         function populateResultsTable(data) {
+
             console.log("Data received:", data); // Debugging the data format
+           
 
             const resultsTable = document.getElementById('resultsTable');
             if (!resultsTable) {
@@ -376,14 +463,31 @@
             // Using a for loop instead of forEach
             for (let i = 0; i < data.length; i++) {
 
-                if (i % 2 == 0 ){
+                if (i % 9 == 0 ){
                     const itemName = data[i];
-                    const value = data[i + 1];
+                    const value_calories = data[i + 1];
+                    const value_protein = data[i + 2];
+                    const value_fat = data[i + 3];
+                    const value_cholestrol = data[i + 4];
+                    const value_sodium = data[i + 5];
+                    const value_carbs = data[i + 6];
+                    const value_fiber = data[i + 7];
+                    const value_sugar = data[i + 8];
+
                     // Create a new table row
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${itemName}</td>
-                        <td>${value}</td>
+                       
+                        <td> ${itemName}</td>
+                        <td> ${value_calories}</td>
+                
+                        <td>${value_protein}</td>
+                        <td>${value_fat}</td>
+                        <td>${value_cholestrol}</td>
+                        <td>${value_sodium}</td>
+                        <td>${value_carbs}</td>
+                        <td>${value_fiber}</td>
+                        <td>${value_sugar}</td>
                     `;
                     resultsTable.appendChild(row);
                     }
@@ -391,32 +495,19 @@
                     continue;
                 }
 
-                // Ensure each item is a tuple with exactly two elements
+               
                      
             }
         }
-
-
+        function restart() {
+            selectedRestaurant = '';
+            selectedCategory = '';
+            selectedCriteria = '';
+            selectedLevel = '';
         
-                
-
-
-    
-        // function displayResults(data) {
-        //     const tbody = document.getElementById('resultsTable');
-        //     tbody.innerHTML = '';
-    
-        //     data.forEach(item => {
-        //         console.log('Displaying item:', item); // Debugging line to print each item
-        //         const row = document.createElement('tr');
-        //         row.innerHTML = `
-        //             <td>${item.foodName}</td>
-        //             <td>${item.category}</td>
-        //             <td>${item.criteriaValue}</td>
-        //         `;
-        //         tbody.appendChild(row);
-        //     });
-        // }
+            goToPage(1);
+        }
     </script>
-
+    </body>
 </html>
+   
