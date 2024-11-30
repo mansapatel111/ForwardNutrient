@@ -91,12 +91,16 @@ def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
 
     for i in range(0, len(result_vector), 2):  
         meal_name = result_vector[i]
+        priority_value = result_vector[i + 1]
+        
         nutrients.append(meal_name)
+        nutrients.append(priority_value)
         
         if meal_name in course_items:
             nutrient_facts = course_items[meal_name]
             for nutrient, value in nutrient_facts:
-                nutrients.append(value)
+                if nutrient != priority:  # Skip the priority metric
+                    nutrients.append(value)
 
     return nutrients
 
@@ -106,4 +110,5 @@ def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
 
 # Ensure the script runs only if executed directly
 #if __name__ == "__main__":
-#   print(quick_main("Dairy Queen", "Desserts", "protein", "high"))
+   #print(quick_main("Dairy Queen", "Desserts", "protein", "high"))
+

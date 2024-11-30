@@ -1,5 +1,5 @@
 import pandas as pd
-rest = pd.read_excel("C:/Users/vikyc/Documents/ms_annual_data_2022.xlsx")
+rest = pd.read_excel("data/ms_annual_data_2022.xlsx")
 rest.head()
 
 
@@ -96,6 +96,6 @@ def mergeSort(rests, start, end):
 
 
 #sorts the food_items vector in ascending order using a merge sort algorithm
-restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "calories"
-mergeFunction(restaurant_input, category_input, nutrition_input, "low")
+restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "protein"
+# print(mergeFunction(restaurant_input, category_input, nutrition_input, "high"))
 #print(food_items)
