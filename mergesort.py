@@ -10,9 +10,22 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
     restaurants = {}
     counter = 0
     for index, row in rest.iterrows():
+        if pd.isna(row[criteria_input]):
+            continue
+
         r = row['restaurant']
         category, food_name, calories, fat, cholesterol, sodium, carbs, fiber, sugar, protein = row['food_category'], row['item_name'], row['calories'], row['total_fat'], row['cholesterol'], row['sodium'], row['carbohydrates'], row['dietary_fiber'], row['sugar'], row['protein']
-        item = {food_name: [("calories", calories), ("fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbs", carbs), ("fiber", fiber), ("sugar", sugar), ("protein", protein)]}
+        
+        if pd.isna(row['calories']): calories = "no value"
+        if pd.isna(row['total_fat']): fat = "no value"
+        if pd.isna(row['cholesterol']): cholesterol = "no value"
+        if pd.isna(row['sodium']): sodium = "no value"
+        if pd.isna(row['carbohydrates']): carbs = "no value"
+        if pd.isna(row['dietary_fiber']): fiber = "no value"
+        if pd.isna(row['sugar']): sugar = "no value"
+        if pd.isna(row['protein']): protein = "no value"
+
+        item = {food_name: [("calories", calories), ("total_fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbohydrates", carbs), ("dietary_fiber", fiber), ("sugar", sugar), ("protein", protein)]}
         if r not in restaurants:
             curr_dict = {category: item}
             restaurants[r] = curr_dict
@@ -20,8 +33,12 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
             if category not in restaurants[r]:
                 restaurants[r][category] = item
             else:
-                restaurants[r][category][food_name] = [("calories", calories), ("fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbs", carbs), ("fiber", fiber), ("sugar", sugar), ("protein", protein)]
+                restaurants[r][category][food_name] = [("calories", calories), ("total_fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbohydrates", carbs), ("dietary_fiber", fiber), ("sugar", sugar), ("protein", protein)]
         
+    #returns an error string if the restaurant doesn't have that category of food
+    if category_input not in restaurants[restaurant_input]:
+        return "error: category not found"
+
     food_items = []
     for food_name, food_info in restaurants[restaurant_input][category_input].items():
         nutrition = next(value for n, value in food_info if n == criteria_input)
@@ -32,13 +49,19 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
     #makes a vector of the highest 5 or lowest 5 foods in the inputted nutrition and returns it
     leveledFoods = []
     if(level_input == "Low"):
-        for a in range(5):
-            leveledFoods.append(food_items[a][0])
-            leveledFoods.append(food_items[a][1])
+        h = 0
+        while h < 5 and len(food_items) > h:
+            leveledFoods.append(food_items[h][0])
+            leveledFoods.append(food_items[h][1])
+            h += 1
     if(level_input == "High"):
-        for b in range(-1, -6, -1):
-            leveledFoods.append(food_items[b][0])
-            leveledFoods.append(food_items[b][1])
+        d = len(food_items) - 1
+        counter = 0
+        while d >= 0 and counter < 5:
+            leveledFoods.append(food_items[d][0])
+            leveledFoods.append(food_items[d][1])
+            d -= 1
+            counter += 1
     r = retrieveAllNutrients(restaurants, leveledFoods, restaurant_input, category_input, criteria_input, level_input)
     return r
 
