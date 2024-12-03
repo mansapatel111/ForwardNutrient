@@ -1,50 +1,46 @@
 import pandas as pd
-rest = pd.read_excel("C:/Users/vikyc/Documents/ms_annual_data_2022.xlsx")
-rest.head()
-
-
-restaurants = {}
-counter = 0
-for index, row in rest.iterrows():
-    r = row['restaurant']
-    category, food_name, calories, fat, cholesterol, sodium, carbs, fiber, sugar, protein = row['food_category'], row['item_name'], row['calories'], row['total_fat'], row['cholesterol'], row['sodium'], row['carbohydrates'], row['dietary_fiber'], row['sugar'], row['protein']
-    item = {food_name: [("calories", calories), ("fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbs", carbs), ("fiber", fiber), ("sugar", sugar), ("protein", protein)]}
-    if r not in restaurants:
-        curr_dict = {category: item}
-        restaurants[r] = curr_dict
-    else:
-        if category not in restaurants[r]:
-            restaurants[r][category] = item
-        else:
-            restaurants[r][category][food_name] = [("calories", calories), ("fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbs", carbs), ("fiber", fiber), ("sugar", sugar), ("protein", protein)]
-#print(dict(list(restaurants.items())[:5]))
-
 
 #performs the merge sort algorithm based on user selections
-#def merge_sort_setup(restaurant_input, category_input, nutrition_input):
-    #restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "protein"
     
 #makes a vector of tuples with a food item and a nutrient value of food items under a chosen category for a chosen restaurant that are going to be sorted based on what the user is looking for
 #e.g. user chooses The Cheesecake Factory, Desserts, and calories so the vector is tuples of desserts from that restaurant with their corresponding calories
-def mergeFunction(restaurant_input, category_input, nutrition_input, level):
+def mergeFunction(restaurant_input, category_input, criteria_input, level_input):
+    rest = pd.read_excel("data/ms_annual_data_2022.xlsx")
+
+    restaurants = {}
+    counter = 0
+    for index, row in rest.iterrows():
+        r = row['restaurant']
+        category, food_name, calories, fat, cholesterol, sodium, carbs, fiber, sugar, protein = row['food_category'], row['item_name'], row['calories'], row['total_fat'], row['cholesterol'], row['sodium'], row['carbohydrates'], row['dietary_fiber'], row['sugar'], row['protein']
+        item = {food_name: [("calories", calories), ("fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbs", carbs), ("fiber", fiber), ("sugar", sugar), ("protein", protein)]}
+        if r not in restaurants:
+            curr_dict = {category: item}
+            restaurants[r] = curr_dict
+        else:
+            if category not in restaurants[r]:
+                restaurants[r][category] = item
+            else:
+                restaurants[r][category][food_name] = [("calories", calories), ("fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbs", carbs), ("fiber", fiber), ("sugar", sugar), ("protein", protein)]
+        
     food_items = []
     for food_name, food_info in restaurants[restaurant_input][category_input].items():
-        nutrition = next(value for n, value in food_info if n == nutrition_input)
+        nutrition = next(value for n, value in food_info if n == criteria_input)
         food_items.append((food_name, nutrition))
     #sorts the food_items vector with the merge sort algorithm
     mergeSort(food_items, 0, len(food_items) - 1)
 
     #makes a vector of the highest 5 or lowest 5 foods in the inputted nutrition and returns it
     leveledFoods = []
-    if(level == "low"):
+    if(level_input == "Low"):
         for a in range(5):
             leveledFoods.append(food_items[a][0])
             leveledFoods.append(food_items[a][1])
-    if(level == "high"):
+    if(level_input == "High"):
         for b in range(-1, -6, -1):
             leveledFoods.append(food_items[b][0])
             leveledFoods.append(food_items[b][1])
-    return leveledFoods
+    r = retrieveAllNutrients(restaurants, leveledFoods, restaurant_input, category_input, criteria_input, level_input)
+    return r
 
 #merge and mergeSort logic from Discussion 8 - Sorting slides 11 and 12
 #part of the merge sort where it merges two sections of the main vector
@@ -94,7 +90,7 @@ def mergeSort(rests, start, end):
         mergeSort(rests, middle + 1, end)
         merge(rests, start, middle, end)
 
-def retrieveAllNutrients(top_foods, restaurant_input, category_input):
+def retrieveAllNutrients(restaurants, top_foods, restaurant_input, category_input, criteria_input, level_input):
     all_foods = restaurants[restaurant_input][category_input]
     curr_food_index = 0
     curr_ind = 0
@@ -106,8 +102,3 @@ def retrieveAllNutrients(top_foods, restaurant_input, category_input):
         curr_ind += 1
         curr_food_index = curr_ind
     return top_foods
-        
-            
-#sorts the food_items vector in ascending order using a merge sort algorithm
-restaurant_input, category_input, nutrition_input = "Dairy Queen", "Desserts", "calories"
-retrieveAllNutrients(mergeFunction(restaurant_input, category_input, nutrition_input, "low"), restaurant_input, category_input)
