@@ -16,8 +16,11 @@ def home():
 @app.route('/sort', methods=['POST'])
 def sort_data():
     data = request.json
+    # edge case if no data is provided
     if not data:
         return jsonify({'error': 'No data provided'}), 400
+    
+    # load data from request
 
     restaurant = data.get('restaurant', '')
     category = data.get('category', '')
@@ -25,15 +28,25 @@ def sort_data():
     level = data.get('level', '')
     sorting = data.get('sorting', '')
 
+    # edge case if missing data fields
+
     if not restaurant or not category or not criteria or not level:
         return jsonify({'error': 'Missing data fields'}), 400
 
+    # edge case if invalid sorting method
+
+    # Quick Sort
+
     if sorting == 'Quick': 
+        # the timing import to track time
         start_time = timeit.default_timer()
         sorted_data = quick_main(restaurant, category, criteria, level)
         elapsed_time = timeit.default_timer() - start_time
         print(f"Quick Time Elapsed: {elapsed_time}")
+
+    # Merge Sort
     elif sorting == 'Merge':
+
         start_time = timeit.default_timer()
         sorted_data = mergeFunction(restaurant, category, criteria, level)
         elapsed_time = timeit.default_timer() - start_time
