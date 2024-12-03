@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify
 import pandas as pd
 from quicksort import quick_main
 from mergesort import mergeFunction
+from mergesort import retrieveAllNutrients
+import timeit;
 app = Flask(__name__)
 
 data = pd.read_excel('data/ms_annual_data_2022.xlsx')
@@ -10,7 +12,7 @@ data = pd.read_excel('data/ms_annual_data_2022.xlsx')
 def home():
     return render_template('pyshow.html')
 
-@app.route('/sort', methods=['POST'])
+
 @app.route('/sort', methods=['POST'])
 def sort_data():
     data = request.json
@@ -27,12 +29,19 @@ def sort_data():
         return jsonify({'error': 'Missing data fields'}), 400
 
     if sorting == 'Quick': 
+        start_time = timeit.default_timer()
         sorted_data = quick_main(restaurant, category, criteria, level)
-    else:
+        elapsed_time = timeit.default_timer() - start_time
+        print(f"Quick Time Elapsed: {elapsed_time}")
+    elif sorting == 'Merge':
+        start_time = timeit.default_timer()
         sorted_data = mergeFunction(restaurant, category, criteria, level)
+        elapsed_time = timeit.default_timer() - start_time
+        print(f"Merge Time Elapsed: {elapsed_time}")
+        
     # print(quicksort.quick_main(restaurant, category, criteria, level))
 
-    # print(message)
+  
     
     
     
