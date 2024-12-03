@@ -34,22 +34,6 @@ def quick_main(user_r, course, priority, high_low):
             row['carbohydrates'], row['dietary_fiber'], row['sugar'], row['protein']
         )
 
-        if pd.isna(row['calories']):
-            calories = "no value"
-        if pd.isna(row['total_fat']):
-            fat = "no value"
-        if pd.isna(row['cholesterol']):
-            cholestorol = "no value"
-        if pd.isna(row['sodium']):
-            sodium = "no value"
-        if pd.isna(row['carbohydrates']):
-            carbs = "no value"
-        if pd.isna(row['dietary_fiber']):
-            fiber = "no value"
-        if pd.isna(row['sugar']):
-            sugar = "no value"
-        if pd.isna(row['protein']):
-            protein = "no value"
 
         nutrient_dict = {
             "calories": calories, "total_fat": fat, "cholesterol": cholesterol,
@@ -169,5 +153,4 @@ def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
 # Ensure the script runs only if executed directly
 #if __name__ == "__main__":
 #    print(quick_main("Cracker Barrel", "Sandwiches", "dietary_fiber", "High"))
-
 
