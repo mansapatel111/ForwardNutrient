@@ -455,7 +455,10 @@
 
         
 
-            if (data.length === 0) {
+            if(data === "error: category not found"){
+                resultsTable.innerHTML = `<tr><td colspan="2" style="color: red; font-size: 1.5em;">No criteria found</td></tr>`;
+                return;
+            }else if (data.length === 0){
                 resultsTable.innerHTML = `<tr><td colspan="2">No results found</td></tr>`;
                 return;
             }
