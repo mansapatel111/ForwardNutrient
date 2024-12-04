@@ -1,12 +1,12 @@
 import pandas as pd
 
-#performs the merge sort algorithm based on user selections
-    
-#makes a vector of tuples with a food item and a nutrient value of food items under a chosen category for a chosen restaurant that are going to be sorted based on what the user is looking for
-#e.g. user chooses The Cheesecake Factory, Desserts, and calories so the vector is tuples of desserts from that restaurant with their corresponding calories
+#performs the merge sort algorithm based on user selections and returns a vector of the food items ranked by 1 criteria, along with their other nutrient values
 def mergeFunction(restaurant_input, category_input, criteria_input, level_input):
-    rest = pd.read_excel("data/ms_annual_data_2022.xlsx")
 
+    #makes a vector of tuples with a food item and a nutrient value of food items under a chosen category for a chosen restaurant that are going to be sorted based on what the user is looking for
+    #e.g. user chooses The Cheesecake Factory, Desserts, and calories so the vector is tuples of desserts from that restaurant with their corresponding calories
+    #if a food item doesn't have a value for the criteria the user selected, that food item is not added to the map
+    rest = pd.read_excel("data/ms_annual_data_2022.xlsx")
     restaurants = {}
     counter = 0
     for index, row in rest.iterrows():
@@ -15,7 +15,8 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
 
         r = row['restaurant']
         category, food_name, calories, fat, cholesterol, sodium, carbs, fiber, sugar, protein = row['food_category'], row['item_name'], row['calories'], row['total_fat'], row['cholesterol'], row['sodium'], row['carbohydrates'], row['dietary_fiber'], row['sugar'], row['protein']
-        
+
+        #checks if a food item is missing a nutrient value, it replaces it with "no value"
         if pd.isna(row['calories']): calories = "no value"
         if pd.isna(row['total_fat']): fat = "no value"
         if pd.isna(row['cholesterol']): cholesterol = "no value"
@@ -35,13 +36,14 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
             else:
                 restaurants[r][category][food_name] = [("calories", calories), ("total_fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbohydrates", carbs), ("dietary_fiber", fiber), ("sugar", sugar), ("protein", protein)]
         
-
+    #returns an error istring if the criteria is not available in the food items
     if restaurant_input not in restaurants:
         return "error: criteria not found in restaurant"
     #returns an error string if the restaurant doesn't have that category of food
     if category_input not in restaurants[restaurant_input]:
         return "error: category not found"
 
+    #makes a vector of tuples of the foods in the inputted category and restaurant and its nutrititonal value that's requested by the user
     food_items = []
     for food_name, food_info in restaurants[restaurant_input][category_input].items():
         nutrition = next(value for n, value in food_info if n == criteria_input)
@@ -49,7 +51,7 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
     #sorts the food_items vector with the merge sort algorithm
     mergeSort(food_items, 0, len(food_items) - 1)
 
-    #makes a vector of the highest 5 or lowest 5 foods in the inputted nutrition and returns it
+    #makes a vector of the highest 5 or lowest 5 foods in the inputted nutrition (or the top n items as long as n is less than 6)
     leveledFoods = []
     if(level_input == "Low"):
         h = 0
@@ -65,6 +67,8 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
             leveledFoods.append(food_items[d][1])
             d -= 1
             counter += 1
+
+    #makes a new vector of the top food items with ALL their nutrient facts (including the one that we used to sort)
     r = retrieveAllNutrients(restaurants, leveledFoods, restaurant_input, category_input, criteria_input, level_input)
     return r
 
@@ -116,6 +120,7 @@ def mergeSort(rests, start, end):
         mergeSort(rests, middle + 1, end)
         merge(rests, start, middle, end)
 
+#edits the top_foods vector to include all the nutrients of the food items instead of only 1 and returns it
 def retrieveAllNutrients(restaurants, top_foods, restaurant_input, category_input, criteria_input, level_input):
     all_foods = restaurants[restaurant_input][category_input]
     curr_food_index = 0
