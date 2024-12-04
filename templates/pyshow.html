@@ -458,8 +458,8 @@
             if(data === "error: category not found"){
                 resultsTable.innerHTML = `<tr><td colspan="2" style="color: red; font-size: 1em;"> Oops! Your food category was not found in the dataset, Try a different Category!</td></tr>`;
                 return;
-            }else if(data === "error: crirteria not found in restaurant"){
-                resultsTable.innerHTML = `<tr><td colspan="2" style="color: red; font-size: 1em;"> Sorry! We dont have data for this crirteria at this restaurant, Try a different crirteria!</td></tr>`;
+            }else if(data === "error: criteria not found in restaurant"){
+                resultsTable.innerHTML = `<tr><td colspan="2" style="color: red; font-size: 1em;"> Sorry! We dont have data for this criteria at this restaurant, Try a different crirteria!</td></tr>`;
                 return;
             }else if (data.length === 0){
                 resultsTable.innerHTML = `<tr><td colspan="2">No results found</td></tr>`;
