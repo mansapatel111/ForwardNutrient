@@ -31,7 +31,7 @@ def quick_main(user_r, course, priority, high_low):
         r = row['restaurant']
         category, food_name = row['food_category'], row['item_name']
 
-        # Skip adding the item if the priority metric value is missing
+        # Skip adding the item if the priority metric value is missing and fixes na values by making them into string saying "no value"
         if pd.isna(row[priority]):
             continue
         calories, fat, cholesterol, sodium, carbs, fiber, sugar, protein = (
@@ -93,6 +93,7 @@ def quick_main(user_r, course, priority, high_low):
         return "error: category not found"
     
     meal_list = quick_sort(meal_list)
+    #creates final list with top 5 or bottom 5 sorted foods depending on if the user chooses "high" or "low"
     if len(meal_list) < 5:
         if high_low == 'Low':
             bottom_5 = []
@@ -126,6 +127,7 @@ def quick_main(user_r, course, priority, high_low):
     return result
 
 def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
+    #finds the rest of the nutrition facts from the ranked food items in the list
     nutrients = []
     
     curr_dict = restaurants.get(user_r, {})
@@ -143,15 +145,3 @@ def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
     return nutrients
 
 
-
-
-
-# Ensure the script runs only if executed directly
-#if __name__ == "__main__":
-#    print(quick_main("Cracker Barrel", "Sandwiches", "dietary_fiber", "High"))
-
-
-
-# Ensure the script runs only if executed directly
-#if __name__ == "__main__":
-#    print(quick_main("Cracker Barrel", "Sandwiches", "dietary_fiber", "High"))
