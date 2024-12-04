@@ -27,18 +27,18 @@ def quick_main(user_r, course, priority, high_low):
     restaurants = {}
     counter = 0
     for index, row in rest.iterrows():
+        
         r = row['restaurant']
         category, food_name = row['food_category'], row['item_name']
+
+        # Skip adding the item if the priority metric value is missing
+        if pd.isna(row[priority]):
+            continue
         calories, fat, cholesterol, sodium, carbs, fiber, sugar, protein = (
             row['calories'], row['total_fat'], row['cholesterol'], row['sodium'],
             row['carbohydrates'], row['dietary_fiber'], row['sugar'], row['protein']
         )
 
-
-        # Skip adding the item if the priority metric value is missing
-        if pd.isna(row[priority]):
-            continue
-        
         if pd.isna(row['calories']):
             calories = "no value"
         if pd.isna(row['total_fat']):
@@ -73,6 +73,8 @@ def quick_main(user_r, course, priority, high_low):
 
     #following code initializes a meal_list with meal name and nutrition value as a tuple
     meal_list = []
+    if user_r not in restaurants:
+        return "error: criteria not found in restaurant"
     curr_dict = restaurants[user_r]
 
     if course in curr_dict:
@@ -141,6 +143,12 @@ def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
     return nutrients
 
 
+
+
+
+# Ensure the script runs only if executed directly
+#if __name__ == "__main__":
+#    print(quick_main("Cracker Barrel", "Sandwiches", "dietary_fiber", "High"))
 
 
 
