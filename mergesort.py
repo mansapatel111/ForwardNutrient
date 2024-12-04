@@ -35,6 +35,9 @@ def mergeFunction(restaurant_input, category_input, criteria_input, level_input)
             else:
                 restaurants[r][category][food_name] = [("calories", calories), ("total_fat", fat), ("cholesterol", cholesterol), ("sodium", sodium), ("carbohydrates", carbs), ("dietary_fiber", fiber), ("sugar", sugar), ("protein", protein)]
         
+
+    if restaurant_input not in restaurants:
+        return "error: criteria not found in restaurant"
     #returns an error string if the restaurant doesn't have that category of food
     if category_input not in restaurants[restaurant_input]:
         return "error: category not found"
