@@ -35,14 +35,8 @@ def quick_main(user_r, course, priority, high_low):
         )
 
 
-        nutrient_dict = {
-            "calories": calories, "total_fat": fat, "cholesterol": cholesterol,
-            "sodium": sodium, "carbohydrates": carbs, "dietary_fiber": fiber,
-            "sugar": sugar, "protein": protein
-        }
-
         # Skip adding the item if the priority metric value is missing
-        if pd.isna(nutrient_dict[priority]):
+        if pd.isna(row[priority]):
             continue
         
         if pd.isna(row['calories']):
@@ -153,4 +147,3 @@ def top_nutrient_facts(result_vector, user_r, course, restaurants, priority):
 # Ensure the script runs only if executed directly
 #if __name__ == "__main__":
 #    print(quick_main("Cracker Barrel", "Sandwiches", "dietary_fiber", "High"))
-
