@@ -122,7 +122,7 @@ def retrieveAllNutrients(restaurants, top_foods, restaurant_input, category_inpu
     curr_ind = 0
     while(curr_ind < len(top_foods) - 1):
         del top_foods[curr_ind + 1]
-        for j in range(len(all_foods[top_foods[curr_food_index]])):
+        for j in range(8):
             top_foods.insert(curr_ind + 1, all_foods[top_foods[curr_food_index]][j][1])
             curr_ind += 1
         curr_ind += 1
