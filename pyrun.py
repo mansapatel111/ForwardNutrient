@@ -52,11 +52,7 @@ def sort_data():
         elapsed_time = timeit.default_timer() - start_time
         print(f"Merge Time Elapsed: {elapsed_time}")
         
-    # print(quicksort.quick_main(restaurant, category, criteria, level))
 
-  
-    
-    
     
     return jsonify(sorted_data)
 
