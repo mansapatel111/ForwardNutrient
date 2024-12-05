@@ -1,5 +1,6 @@
 This is Nutrient Forward!
 
+NutrientForward is a website that allows users to select from a wide variety of common U.S. restaurant chains depending on where they are planning on eating. 
 
 
 More Info for setup >>
