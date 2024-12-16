@@ -1,6 +1,6 @@
 This is Nutrient Forward!
 
-NutrientForward is a website that allows users to select from a wide variety of common U.S. restaurant chains depending on where they are planning on eating. THey can filter their options depending on their diet requirements (such as high in protein, low in cholestrol) and our sorting algorithms will help you find the best food option depending on your needs!
+NutrientForward is a website that allows users to select from a wide variety of common U.S. restaurant chains depending on where they are planning on eating. They can filter their options depending on their diet requirements (such as high in protein, low in cholestrol) and our sorting algorithms will help you find the best food option depending on your needs!
 
 
 More Info for setup >>
